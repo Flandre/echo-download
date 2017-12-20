@@ -16,19 +16,86 @@
 <body>
 <div class="container main">
   <textarea class="form-control" rows="3" id="ipt"></textarea>
-  <a href="javascript:;" id="btn" class="btn btn-block btn-primary">查询</a>
+  <a href="javascript:;" id="btn" class="btn btn-block btn-primary">生成</a>
   <pre>Array.prototype.map.call($('.js-mp-play-one'), ele => ele.getAttribute('data-sid'))</pre>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-default" onclick="checkAll()">全选</button>
+    <button type="button" class="btn btn-default" onclick="inverseCheck()">反选</button>
+    <button type="button" class="btn btn-default" onclick="deselectAll()">全取消</button>
+    <button type="button" class="btn btn-default" onclick="downloadCheck()">批量下载</button>
+  </div>
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th>check</th>
+      <th>musicId</th>
+      <th>name</th>
+      <th>length</th>
+      <th>active</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
 </div>
 </body>
 <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script>
+  var tbody = $('tbody')
   $('#btn').on('click', function(){
+    tbody.empty()
     var list = eval($('#ipt').val())
     list.forEach(function(ele){
-      $.get('/getMusic?id=' + ele, function(d){
-
+      $.get('/getMusic?id=' + ele, function(data){
+        var info = JSON.parse(data).info
+        if(data == 'error'){
+          $(
+            '<tr>' +
+            '<td><input type="checkbox" disabled></td>' +
+            '<td>' + ele + '</td>' +
+            '<td colspan="3">生成失败</td>' +
+            '</tr>'
+          ).appendTo(tbody)
+        } else {
+          $(
+            '<tr>' +
+              '<td><input type="checkbox"></td>' +
+              '<td>' + ele + '</td>' +
+              '<td>' + info.name + '</td>' +
+              '<td>' + formatLength(info.length) + '</td>' +
+              '<td class="download-box"><a href="' + info.source + '" download="' + info.name + '.mp3">下载</a></td>' +
+            '</tr>'
+          ).appendTo(tbody)
+          console.log(JSON.parse(data))
+        }
       })
     })
   })
+  function checkAll(){
+    $(':checkbox', tbody).prop("checked", true)
+  }
+  function inverseCheck(){
+    $(':checkbox', tbody).each(function () {
+      $(this).prop("checked", !$(this).prop("checked"));
+    });
+  }
+  function deselectAll() {
+    $(':checkbox', tbody).prop("checked", false);
+  }
+  function downloadCheck(){
+    $(':checkbox', tbody).each(function(){
+      if($(this).prop("checked")){
+        var info = $(this).parents('tr').children('.download-box').children('a')
+        $.get('/download?downloadPath=' + info.attr('href') + '&fileName=' + info.attr('download'))
+      }
+    })
+  }
+  function formatLength(length){
+    return Math.floor(length / 60 / 60) + ':' + addZero(Math.floor(length / 60 % 60)) + ':' + addZero(Math.floor(length % 60))
+  }
+  function addZero(num){
+    return num >= 10 ? num : '0' + num
+  }
 </script>
 </html>

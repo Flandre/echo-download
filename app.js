@@ -1,7 +1,9 @@
 const express = require('express')
 const fs = require('fs')
-var path = require('path')
-var http = require('http')
+const path = require('path')
+const http = require('http')
+const https = require('https')
+const request = require('request')
 const opn = require('opn')
 
 const app = express();
@@ -9,38 +11,57 @@ const app = express();
 
 opn('http://localhost:8233', {app: 'chrome'})
 
-app.listen('8233', function () {
+app.listen('8233', () => {
   console.log('server started')
-  console.log('http://localhost:8088')
+  console.log('http://localhost:8233')
 })
 
-function getMusicSourceById(musicId, res) {
+const getMusicSourceById = (musicId, callback) => {
   console.log(musicId)
-  var options = {
+  let options = {
     hostname: 'www.app-echo.com',
     port: 80,
-    path: '/api/sound/info',
-    query: {
-      id: musicId
-    },
+    path: '/api/sound/info?id=' + musicId,
     headers: {
       'Content-Type': 'application/json'
     }
   };
   http.get(options, function (res) {
-    console.log(Object.keys(res))
-    console.log(res.req)
+    res.setEncoding('utf8')
+    let status = res.statusCode
+    console.log(status)
+    if(status == 200){
+      let data = ''
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => {
+        console.log(data)
+        callback(data)
+      })
+    } else {
+      callback('error')
+    }
   });
-
 }
 
-app.get('/getMusic', function(req, res) {
-  var querydata = req.query;
-  var orderid = querydata.id;
-  getMusicSourceById(orderid, res)
+app.get('/getMusic', (req, res) => {
+  let musicId = req.query.id
+  getMusicSourceById(musicId, data => {
+    res.send(data)
+  })
 });
 
+app.get('/download', (req, res) => {
+  console.log('download start')
+  let downloadPath = req.query.downloadPath, fileName = req.query.fileName
+  if (!fs.existsSync(path.join(__dirname, 'download'))) {
+    fs.mkdirSync(path.join(__dirname, 'download'));
+  }
+  request(downloadPath).pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
+})
+
 app.get('/', function (req, res) {
-  var data = fs.readFileSync('index.html', 'utf-8');
+  let data = fs.readFileSync('index.html', 'utf-8');
   res.send(data);
 })
+
+

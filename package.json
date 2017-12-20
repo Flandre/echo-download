@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Flandre/echo-download#readme",
   "dependencies": {
     "express": "^4.16.2",
-    "opn": "^5.1.0"
+    "opn": "^5.1.0",
+    "request": "^2.83.0"
   }
 }
