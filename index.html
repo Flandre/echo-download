@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .main {
+      margin-top: 30px;
+    }
+    #ipt {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container main">
+  <textarea class="form-control" rows="3" id="ipt"></textarea>
+  <a href="javascript:;" id="btn" class="btn btn-block btn-primary">查询</a>
+  <pre>Array.prototype.map.call($('.js-mp-play-one'), ele => ele.getAttribute('data-sid'))</pre>
+</div>
+</body>
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script>
+  $('#btn').on('click', function(){
+    var list = eval($('#ipt').val())
+    list.forEach(function(ele){
+      $.get('/getMusic?id=' + ele, function(d){
+
+      })
+    })
+  })
+</script>
+</html>
