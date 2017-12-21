@@ -7,6 +7,7 @@ const request = require('request')
 const opn = require('opn')
 
 const app = express();
+app.use(express.static('public'))
 
 
 opn('http://localhost:8233', {app: 'chrome'})

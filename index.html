@@ -4,29 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .main {
-      margin-top: 30px;
-    }
-    #ipt {
-      margin-bottom: 10px;
-    }
-    .tooltip-inner {
-      max-width: 1000px!important;
-      white-space: nowrap;
-    }
-    .glyphicon-refresh {
-      animation: rotateIcon 3s linear infinite;
-    }
-    @keyframes rotateIcon {
-      from {
-        transform: rotate(0deg)
-      }
-      to {
-        transform: rotate(360deg)
-      }
-    }
-  </style>
+  <link href="index.css" rel="stylesheet">
 </head>
 <body>
 <div class="container main">
@@ -57,66 +35,5 @@
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-  $(function () { $("[data-toggle='tooltip']").tooltip(); });
-  var tbody = $('tbody')
-  $('#btn').on('click', function(){
-    tbody.empty()
-    var list = eval($('#ipt').val())
-    list.forEach(function(ele){
-      $.get('/getMusic?id=' + ele, function(data){
-        var info = JSON.parse(data).info
-        if(data == 'error'){
-          $(
-            '<tr>' +
-            '<td></td>' +
-            '<td>' + ele + '</td>' +
-            '<td colspan="3">生成失败</td>' +
-            '</tr>'
-          ).appendTo(tbody)
-        } else {
-          $(
-            '<tr>' +
-              '<td class="status"><input type="checkbox"></td>' +
-              '<td>' + ele + '</td>' +
-              '<td>' + info.name + '</td>' +
-              '<td>' + formatLength(info.length) + '</td>' +
-              '<td class="download-box"><a href="' + info.source + '" download="' + info.name + '.mp3">下载</a></td>' +
-            '</tr>'
-          ).appendTo(tbody)
-        }
-      })
-    })
-  })
-  function checkAll(){
-    $(':checkbox', tbody).prop("checked", true)
-  }
-  function inverseCheck(){
-    $(':checkbox', tbody).each(function () {
-      $(this).prop("checked", !$(this).prop("checked"));
-    });
-  }
-  function deselectAll() {
-    $(':checkbox', tbody).prop("checked", false);
-  }
-  function downloadCheck(){
-    $(':checkbox', tbody).each(function(){
-      if($(this).prop("checked")){
-        var tr = $(this).parents('tr'), info = tr.children('.download-box').children('a')
-        tr.children('.status').empty().append('<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>')
-        $.get('/download?downloadPath=' + info.attr('href') + '&fileName=' + info.attr('download'), function(d){
-          if(d == 'ok'){
-            tr.children('.status').empty().append('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>')
-          }
-        })
-      }
-    })
-  }
-  function formatLength(length){
-    return Math.floor(length / 60 / 60) + ':' + addZero(Math.floor(length / 60 % 60)) + ':' + addZero(Math.floor(length % 60))
-  }
-  function addZero(num){
-    return num >= 10 ? num : '0' + num
-  }
-</script>
+<script src="index.js"></script>
 </html>
