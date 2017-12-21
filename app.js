@@ -58,6 +58,10 @@ app.get('/download', (req, res) => {
   }
   request(downloadPath)
     .pipe(fs.createWriteStream(path.join(dir, fileName)))
+    .on('error', err => {
+      console.log(err)
+      res.send('err')
+    })
     .on('close', function(){
       console.log(`download end: ${fileName}`)
       res.send('ok')

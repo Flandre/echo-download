@@ -48,6 +48,9 @@ function downloadCheck(){
         if(d == 'ok'){
           tr.children('.status').empty().append('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>')
         }
+        if(d == 'err'){
+          tr.children('.status').empty().append('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>')
+        }
       })
     }
   })
