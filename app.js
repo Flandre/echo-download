@@ -26,7 +26,7 @@ const getMusicSourceById = (musicId, callback) => {
       'Content-Type': 'application/json'
     }
   };
-  http.get(options, function (res) {
+  http.get(options, (res) => {
     res.setEncoding('utf8')
     let status = res.statusCode
     console.log(status)
@@ -51,7 +51,6 @@ app.get('/getMusic', (req, res) => {
 });
 
 app.get('/download', (req, res) => {
-  console.log('download start')
   let downloadPath = req.query.downloadPath, fileName = req.query.fileName
   if (!fs.existsSync(path.join(__dirname, 'download'))) {
     fs.mkdirSync(path.join(__dirname, 'download'));
@@ -59,7 +58,7 @@ app.get('/download', (req, res) => {
   request(downloadPath).pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
 })
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   let data = fs.readFileSync('index.html', 'utf-8');
   res.send(data);
 })
