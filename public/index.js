@@ -44,7 +44,7 @@ function downloadCheck(){
     if($(this).prop("checked")){
       var tr = $(this).parents('tr'), info = tr.children('.download-box').children('a')
       tr.children('.status').empty().append('<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>')
-      $.get('/download?downloadPath=' + info.attr('href') + '&fileName=' + info.attr('download'), function(d){
+      $.get('/download?downloadPath=' + info.attr('href') + '&fileName=' + info.attr('download') + '&downloadDir=' + $('#downloadDir').val(), function(d){
         if(d == 'ok'){
           tr.children('.status').empty().append('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>')
         }

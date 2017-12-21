@@ -4,6 +4,7 @@ const path = require('path')
 const http = require('http')
 const https = require('https')
 const request = require('request')
+const mkdirsSync = require('./lib/mkdirsSync')
 const opn = require('opn')
 
 const app = express();
@@ -49,13 +50,14 @@ app.get('/getMusic', (req, res) => {
 });
 
 app.get('/download', (req, res) => {
-  let downloadPath = req.query.downloadPath, fileName = req.query.fileName
+  let downloadPath = req.query.downloadPath, fileName = req.query.fileName, downloadDir = req.query.downloadDir
   console.log(`download start: ${fileName}`)
-  if (!fs.existsSync(path.join(__dirname, 'download'))) {
-    fs.mkdirSync(path.join(__dirname, 'download'));
+  let dir = path.join(__dirname, 'download', downloadDir)
+  if (!fs.existsSync(dir)) {
+    mkdirsSync(dir);
   }
   request(downloadPath)
-    .pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
+    .pipe(fs.createWriteStream(path.join(dir, fileName)))
     .on('close', function(){
       console.log(`download end: ${fileName}`)
       res.send('ok')
