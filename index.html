@@ -10,7 +10,12 @@
 <div class="container main">
   <textarea class="form-control" rows="3" id="ipt" placeholder="打开echo个人主页，将以下代码粘贴入console中运行，把生成的数组粘贴回这里"></textarea>
   <a href="javascript:;" id="btn" class="btn btn-block btn-primary">生成</a>
-  <pre>Array.prototype.map.call($('.js-mp-play-one'), ele => ele.getAttribute('data-sid'))</pre>
+  <pre>
+    下载收藏：刷新后在console中输入<br>
+    Array.prototype.map.call($('.js-mp-play-one'), ele => ele.getAttribute('data-sid'))<br>
+    下载今日推荐：刷新后在console中输入<br>
+    '[' + $('.expmore .fl i').data('sid') + ']'<br>
+  </pre>
   <div class="row">
     <div class="btn-group col-md-6 col-xs-12" role="group" aria-label="Basic example">
       <button type="button" class="btn btn-default" onclick="checkAll()">全选</button>
