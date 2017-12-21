@@ -29,7 +29,6 @@ const getMusicSourceById = (musicId, callback) => {
   http.get(options, (res) => {
     res.setEncoding('utf8')
     let status = res.statusCode
-    console.log(status)
     if(status == 200){
       let data = ''
       res.on('data', chunk => data += chunk)
