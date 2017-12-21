@@ -17,7 +17,6 @@ app.listen('8233', () => {
 })
 
 const getMusicSourceById = (musicId, callback) => {
-  console.log(musicId)
   let options = {
     hostname: 'www.app-echo.com',
     port: 80,
@@ -50,11 +49,16 @@ app.get('/getMusic', (req, res) => {
 
 app.get('/download', (req, res) => {
   let downloadPath = req.query.downloadPath, fileName = req.query.fileName
+  console.log(`download start: ${fileName}`)
   if (!fs.existsSync(path.join(__dirname, 'download'))) {
     fs.mkdirSync(path.join(__dirname, 'download'));
   }
-  request(downloadPath).pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
-  res.send('ok')
+  request(downloadPath)
+    .pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
+    .on('close', function(){
+      console.log(`download end: ${fileName}`)
+      res.send('ok')
+    });
 })
 
 app.get('/', (req, res) => {
