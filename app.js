@@ -33,7 +33,6 @@ const getMusicSourceById = (musicId, callback) => {
       let data = ''
       res.on('data', chunk => data += chunk)
       res.on('end', () => {
-        console.log(data)
         callback(data)
       })
     } else {
@@ -55,6 +54,7 @@ app.get('/download', (req, res) => {
     fs.mkdirSync(path.join(__dirname, 'download'));
   }
   request(downloadPath).pipe(fs.createWriteStream(path.join(__dirname, 'download', fileName)))
+  res.send('ok')
 })
 
 app.get('/', (req, res) => {
