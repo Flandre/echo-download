@@ -5,7 +5,7 @@ const request = require('request')
 const mkdirsSync = require('./lib/mkdirsSync')
 const MAX_REQUEST = 6
 let requestCount = 0
-let AllShipsObj = {}
+let AllShipsObj = []
 let successCount = 0
 
 const userAgents = [
@@ -67,17 +67,25 @@ const getKanVoice = (name) => {
           try{
             let trsp = tr.split('audioFileUrl')[1].split('lrcFileUrl')[0], fileType = 'mp3'
             if(trsp){
-              if(trsp.indexOf('Ogg') > -1){
+              if(trsp.indexOf('.Ogg') > -1){
                 fileType = 'Ogg'
               }
-              let voiceUrl = trsp.substring(trsp.indexOf('https'), trsp.indexOf(`.${fileType}`)) + `.${fileType}`
-              voiceUrl = voiceUrl.split('\\').join('')
-              voiceObj.push({
-                name: name,
-                voiceName: voiceName,
-                url: voiceUrl,
-                fileType: fileType
-              })
+              if(trsp.indexOf('.ogg') > -1){
+                fileType = 'ogg'
+              }
+              if(trsp.indexOf('.oga') > -1){
+                fileType = 'oga'
+              }
+              if(trsp.indexOf('http') > -1){
+                let voiceUrl = trsp.substring(trsp.indexOf('http'), trsp.indexOf(`.${fileType}`)) + `.${fileType}`
+                voiceUrl = voiceUrl.split('\\').join('')
+                voiceObj.push({
+                  name: name,
+                  voiceName: voiceName,
+                  url: voiceUrl,
+                  fileType: fileType
+                })
+              }
             }
           } catch (e){
             console.log('====ERROR')
@@ -85,12 +93,12 @@ const getKanVoice = (name) => {
           }
         })
         // console.log(voiceObj)
-        AllShipsObj[name] = voiceObj
+        AllShipsObj = AllShipsObj.concat(voiceObj)
         requestCount --
         successCount ++
         if(successCount === KanNames.length){
           console.log(AllShipsObj)
-          fs.writeFile('test.json', JSON.stringify(AllShipsObj, null, 4), 'utf8', (err) => {
+          fs.writeFile('voiceArr.json', JSON.stringify(AllShipsObj, null, 4), 'utf8', (err) => {
             if (err) throw err;
             console.log('done');
           });
