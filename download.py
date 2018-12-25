@@ -52,7 +52,7 @@ def getVoice(ship):
 				print(fn)
 				path = ship.decode("utf8")+"/"+fn
 				print(path)
-				urllib.urlretrieve(audiourl, path)
+				# urllib.urlretrieve(audiourl, path)
 	except Exception, e:
 		print 'str(Exception):\t', str(Exception)
 		print 'str(e):\t\t', str(e)
