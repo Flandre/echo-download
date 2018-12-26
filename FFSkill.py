@@ -33,7 +33,7 @@ def getSkill(id):
                     keyTmp = arr
                     isKey = False
                 else:
-                    if re.search('^BOSS\d', str) or re.search('^BOSS\d', str):
+                    if re.search('^BOSS\d', str) or re.search('^途中', str):
                         isKey = False
                         keyTmp = arr
                     else:
