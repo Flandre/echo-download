@@ -13,20 +13,19 @@ def getSkill(id):
     reqFormat = req.text.replace('\\n', '').replace('\\r', '').replace('\\t', '').replace('\\"', '"')
     soup = BeautifulSoup(reqFormat)
     stepName = []
+    allObj = {}
     for step in soup.ul.find_all('li'):
         stepName.append(step.a.string)
-    for detail in soup.find_all("div", "easytab_area"):
-        print '====---------===='
+    for index, detail in enumerate(soup.find_all("div", "easytab_area")):
         strTmp = ''
         for str in detail.strings:
             strTmp = strTmp + str + '\n'
         strTmpArr = strTmp.strip('\n').split('\n')
-        # print json.dumps(strTmpArr).decode("unicode-escape")
         skillObj = {}
         isKey = True
         keyTmp = ''
         for arr in strTmpArr:
-            if arr.strip() == 0:
+            if len(arr.strip()) == 0:
                 isKey = True
             else:
                 if isKey:
@@ -38,15 +37,9 @@ def getSkill(id):
                         keyTmp = arr
                     else:
                         if skillObj.has_key(keyTmp):
-                            skillObj[keyTmp] = skillObj[keyTmp] + '\n' + arr
+                            skillObj[keyTmp] = skillObj[keyTmp] + '\\n' + arr
                         else:
                             skillObj[keyTmp] = arr
-        print json.dumps(skillObj).decode("unicode-escape")
-
-
-
-
-
-
-
+        allObj[stepName[index]] = skillObj
+    print json.dumps(allObj, sort_keys=False, indent=4).decode("unicode-escape")
 getSkill('301')
